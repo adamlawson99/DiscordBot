@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 
+
 class Greetings(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -13,8 +14,8 @@ class Greetings(commands.Cog):
         if channel is not None:
             await channel.send('Welcome {0.mention}.'.format(member))
 
-    @commands.command()
-    async def hello(self, ctx, *, member : discord.member = None):
+    @commands.command(name="Hello")
+    async def hello(self, ctx, *, member: discord.member = None):
         member = member or ctx.author
         if self._last_member is None or self._last_member.id != member.id:
             self.user_count = 0

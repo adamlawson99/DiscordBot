@@ -4,71 +4,63 @@ import logging
 
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
-from Cogs.Fun import Greetings
 
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
-PREFIX = os.getenv('PREFIX')
+from Cogs.Fun import greetings
+from Cogs.Messaging import directMessaging
+from Cogs.Fun import cottonEyeJoe
 
-client = commands.Bot(
-    command_prefix= discord.ext.commands.when_mentioned_or(PREFIX),
-    allowed_mentions = discord.AllowedMentions()
+
+from Bot.constants import Config, MODERATION_ROLES
+from Bot.bot import Bot
+
+allowed_roles = [discord.Object(id_) for id_ in MODERATION_ROLES]
+
+bot = Bot(
+    command_prefix=discord.ext.commands.when_mentioned_or(Config.PREFIX),
+    allowed_mentions=discord.AllowedMentions(everyone=False, roles=allowed_roles)
+)
 
 logging.basicConfig(level=logging.DEBUG)
 
-client.add_cog(Greetings.Greetings(client))
 
-@client.event
+@bot.event
 async def on_ready():
-    guild = discord.utils.get(client.guilds, name=GUILD)
+    guild = discord.utils.get(bot.guilds, name=Config.GUILD)
     print(
-        f'{client.user} is connected to the guild:\n'
+        f'{bot.user} is connected to the guild:\n'
         f'{guild.name}(id: {guild.id})'
     )
 
 
-@client.event
+@bot.event
 async def on_member_join(member):
     await member.create_dm()
     await member.dm_channel.send(
-        f'Hi {member.name}, welcome to my discord server!'
+        f'Hi {member.name}, welcome to my Night time blue!'
     )
 
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
+@bot.event
+async def on_message(message: discord.message):
+    if message.author == bot.user:
         return
-    match = eligible_for_joke(message)
-    if match:
-        match_as_list = match.group(0).split()
-        word_for_joke = match_as_list[len(match_as_list) - 1]
-        response = f"Hi {word_for_joke} I'm dad!"
-        await message.channel.send(response)
+    if message.content.startswith("$"):
+        await bot.process_commands(message)
     else:
-        await client.process_commands(message)
-
-
-@client.command(
-    help="Enter a user mention followed by a URL pointing an image for the bot to DM "
-    "the mentioned user the picture found at the URL",
-    brief="Mention a user followed by a URL",
-
-)
-async def send_image_dm(ctx, member: discord.Member, url):
-    regex = r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\." \
-            r"[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)\.(jpg|png|svg)"
-    match = re.search(regex, url)
-    if match:
-        await member.send(url)
-    else:
-        await ctx.message.channel.send("Please enter a valid url")
+        match = eligible_for_joke(message)
+        if match:
+            match_as_list = match.group(0).split()
+            word_for_joke = match_as_list[len(match_as_list) - 1]
+            response = f"Hi {word_for_joke} I'm dad!"
+            await message.channel.send(response)
 
 
 def eligible_for_joke(message):
     return re.search(r"I'm \w*|I am \w*", message.content)
 
 
-client.run(TOKEN)
+bot.add_cog(greetings.Greetings(bot))
+bot.add_cog(directMessaging.DirectMessage(bot))
+bot.add_cog(cottonEyeJoe.CottonEyeJoe(bot))
+
+bot.run(Config.TOKEN)
