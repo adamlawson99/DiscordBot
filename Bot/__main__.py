@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 import logging
 
@@ -12,6 +13,8 @@ from Cogs.Fun import cottonEyeJoe
 
 from Bot.constants import Config, MODERATION_ROLES
 from Bot.bot import Bot
+
+sys.path.insert(0, '/the/folder/path/name-package/')
 
 allowed_roles = [discord.Object(id_) for id_ in MODERATION_ROLES]
 
