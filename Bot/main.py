@@ -17,7 +17,7 @@ allowed_roles = [discord.Object(id_) for id_ in MODERATION_ROLES]
 
 bot = Bot(
     command_prefix=discord.ext.commands.when_mentioned_or(Config.PREFIX),
-    # allowed_mentions=discord.AllowedMentions(everyone=False, roles=allowed_roles)
+    #allowed_mentions=discord.AllowedMentions(everyone=False, roles=allowed_roles)
 )
 
 logging.basicConfig(level=logging.DEBUG)
