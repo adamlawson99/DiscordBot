@@ -1,0 +1,8 @@
+{
+  "links": {
+    "cottonEyeJoe": "https://raw.githubusercontent.com/adamlawson99/DiscordBot/master/Resources/Gifs/CottonEyeJoe.gif"
+  },
+  "allowed_roles": [
+    "Owner","Golden Doodool"
+  ]
+}
