@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 import json
 from pathlib import Path
-from Bot import constants
 
 
 class CottonEyeJoe(commands.Cog):

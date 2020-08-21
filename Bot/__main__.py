@@ -9,6 +9,7 @@ from discord.ext import commands
 from Cogs.Fun import greetings
 from Cogs.Messaging import directMessaging
 from Cogs.Fun import cottonEyeJoe
+from Cogs.Fun import poll
 
 from Bot.constants import Config, MODERATION_ROLES
 from Bot.bot import Bot
@@ -59,5 +60,6 @@ async def on_message(message: discord.message):
 bot.add_cog(greetings.Greetings(bot))
 bot.add_cog(directMessaging.DirectMessage(bot))
 bot.add_cog(cottonEyeJoe.CottonEyeJoe(bot))
+bot.add_cog(poll.Poll(bot))
 
 bot.run(Config.TOKEN)
